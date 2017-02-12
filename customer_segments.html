@@ -12093,30 +12093,40 @@ Customer 0 has in each category a purchase cost that is below the median and bel
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[162]:</div>
+<div class="prompt input_prompt">In&nbsp;[189]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Make a copy of the DataFrame, using the &#39;drop&#39; function to drop the given feature</span>
-<span class="n">new_data</span> <span class="o">=</span> <span class="n">data</span>
-<span class="n">new_data</span> <span class="o">=</span> <span class="n">new_data</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Delicatessen&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-<span class="n">delicatessen</span> <span class="o">=</span> <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;Delicatessen&#39;</span><span class="p">]]</span>
+<span class="c1">#new_data = data</span>
+<span class="c1">#new_data = new_data.drop([&#39;Delicatessen&#39;], axis = 1, inplace=False)</span>
+<span class="c1">#delicatessen = data[[&#39;Delicatessen&#39;]]</span>
 <span class="c1">#display(milk.describe())          </span>
 <span class="c1">#display(data.describe())   </span>
 <span class="c1">#display(new_data.describe())</span>
 
 <span class="c1"># TODO: Split the data into training and testing sets using the given feature as the target</span>
-<span class="kn">from</span> <span class="nn">sklearn.cross_validation</span> <span class="kn">import</span> <span class="n">train_test_split</span> 
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">new_data</span><span class="p">,</span> <span class="n">delicatessen</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1">#from sklearn.cross_validation import train_test_split </span>
+<span class="c1">#X_train, X_test, y_train, y_test = train_test_split(new_data, delicatessen, test_size=0.25, random_state=0)</span>
+
+<span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="n">new_data</span><span class="o">=</span><span class="n">data</span>
+    <span class="n">new_data</span> <span class="o">=</span> <span class="n">new_data</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="n">feature</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">new_data</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">feature</span><span class="p">],</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">regressor</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">regressor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s2">&quot;Prediction for the feature &#39;{}&#39;: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
 
 <span class="c1"># TODO: Create a decision tree regressor and fit it to the training set</span>
-<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
-<span class="n">regressor</span> <span class="o">=</span> <span class="n">DecisionTreeRegressor</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">regressor</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="n">pred</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="c1">#from sklearn.tree import DecisionTreeRegressor</span>
+<span class="c1">#regressor = DecisionTreeRegressor(random_state=0)</span>
+<span class="c1">#regressor.fit(X_train, y_train)</span>
+<span class="c1">#pred = regressor.predict(X_test)</span>
 
 <span class="c1"># TODO: Report the score of the prediction using the testing set</span>
-<span class="n">score</span> <span class="o">=</span> <span class="n">regressor</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span><span class="n">y_test</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">score</span>
+<span class="c1">#score = regressor.score(X_test,y_test)</span>
+<span class="c1">#print score</span>
 </pre></div>
 
 </div>
@@ -12129,7 +12139,12 @@ Customer 0 has in each category a purchase cost that is below the median and bel
 
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>-11.6636871594
+<pre>Prediction for the feature &#39;Fresh&#39;: -0.252469807688
+Prediction for the feature &#39;Milk&#39;: 0.365725292736
+Prediction for the feature &#39;Grocery&#39;: 0.602801978878
+Prediction for the feature &#39;Frozen&#39;: 0.253973446697
+Prediction for the feature &#39;Detergents_Paper&#39;: 0.728655181254
+Prediction for the feature &#39;Delicatessen&#39;: -11.6636871594
 </pre>
 </div>
 </div>
@@ -12155,8 +12170,13 @@ Customer 0 has in each category a purchase cost that is below the median and bel
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong>
-I tried to predict delicatessen and R^2 score gave me -11.66 which is very very bad. Obviously the model can't explain the variance of my target variable delicatessen at all. The given variables fail to predict delicatessen.</p>
-<p>This means that delicatessen gives some additional information which can not be represented by any other variable and therefore I suggest that delicatessen will be important for identifying spending's habits.</p>
+I tried each feature and removed it from the dataset in order to predict it through the remaining features.</p>
+<p>For delicatessen, I got a R^2 score of -11.66 which is very very bad. Obviously the model can't explain the variance of my target variable delicatessen at all. The given variables fail to predict delicatessen. This means that delicatessen gives some additional information which can not be represented by any other variable and therefore I suggest that delicatessen will be important for identifying spending's habits.</p>
+<p>Also I got quite a bad R^2 for the feature fresh: -0.25. This means that the other variables does not explain anything of the feature fresh and therefore fresh has some additional information.</p>
+<p>So I think delicatessen as well as fresh are both variables that are not correlated to the other variables at all.</p>
+<p>Then I tried Frozen, which gave me a R^2 of 0.25.  This is quite a low score of R^2 and it states that 25% of variance of frozen can be explained by the independent variables. Same accounts for Milk, which has a R^2 of 0.36. So maybe there is some small correlation between milk and any other variable, resp. frozen and any other feature.</p>
+<p>For the feature Grocery I got a R^2 of 0.60, which is already quite high. 60% of variance of grocery purchase amount can be explained by the purchase amount of the other 5 variables. This implies that the variable will be correlated with one or more other variables.</p>
+<p>The highest R^2 I obtained for detergents and paper with 0.72. Obviously the amount of detergents and paper purchased by the customers can be explained by 72% through the purchase amount of the other 5 variables. This means that Detergents_Paper purchase cost are probably highly correlated with one or more other variables and might not be relevant for the model later on.</p>
 
 </div>
 </div>
@@ -12173,11 +12193,12 @@ I tried to predict delicatessen and R^2 score gave me -11.66 which is very very 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[163]:</div>
+<div class="prompt input_prompt">In&nbsp;[190]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Produce a scatter matrix for each pair of features in the data</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">scatter_matrix</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span> <span class="n">diagonal</span> <span class="o">=</span> <span class="s1">&#39;kde&#39;</span><span class="p">);</span>
+<span class="k">print</span> <span class="n">data</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -12187,6 +12208,27 @@ I tried to predict delicatessen and R^2 score gave me -11.66 which is very very 
 <div class="output_wrapper">
 <div class="output">
 
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>                     Fresh      Milk   Grocery    Frozen  Detergents_Paper  \
+Fresh             1.000000  0.100510 -0.011854  0.345881         -0.101953   
+Milk              0.100510  1.000000  0.728335  0.123994          0.661816   
+Grocery          -0.011854  0.728335  1.000000 -0.040193          0.924641   
+Frozen            0.345881  0.123994 -0.040193  1.000000         -0.131525   
+Detergents_Paper -0.101953  0.661816  0.924641 -0.131525          1.000000   
+Delicatessen      0.244690  0.406368  0.205497  0.390947          0.069291   
+
+                  Delicatessen  
+Fresh                 0.244690  
+Milk                  0.406368  
+Grocery               0.205497  
+Frozen                0.390947  
+Detergents_Paper      0.069291  
+Delicatessen          1.000000  
+</pre>
+</div>
+</div>
 
 <div class="output_area"><div class="prompt"></div>
 
@@ -14827,10 +14869,14 @@ MzMzMzMzs7b8P6YbhZeIVDkmAAAAAElFTkSuQmCC
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>I can detect correlation between the following:
-Milk and Grocery / Milk and Detergents_Paper / Grocery and Detergents_Paper
-The point cloud seems to grow linearly -&gt; if one variable increases the other increases as well.
-In opposite to those varialbes, delicatessen does not correlate with any of the other variables. This confirms my suspicions that this variable will be relevant later on.</p>
+<p>I can detect high correlation between the following: Milk and Grocery / Milk and Detergents_Paper / Grocery and Detergents_Paper . This is shown in the scatterplots, as you can see there is a linear relationship between the variables: if one variable increases the other increases as well. You could lie a straight line into the point cloud. Also the correlation coefficient confirms the graphical observation:</p>
+<p>Milk and Grocery = 0,7283 / Milk and Detergents_Paper = 0,6618 / Grocery and Detergents_Paper = 0,9246</p>
+<p>This corresponds to the previous question where I found that the variance of Detergents and Paper can be explained by 72% of the other variables and here you can see that it is higly correlated with grocery and milk.Also it fits to the R^2 score of 0.6 for the prediction of Grocery, because grocery is highly correlated with milk and detergents.</p>
+<p>A correlation coefficient near by 1 or -1 means  that two variables are fully correlated with each other. A correclation coefficient near around 0 represents that there is no linear correlation between the two variables. Since the correlation coefficient is quite high as stated above, those variables are highly correlated.</p>
+<p>Then there are some variables that show a light correlation with each other:</p>
+<p>Frozen and Fresh = 0,3459 / Milk and delicatessen = 0,4064 / Delicatessen and frozen = 0,3909</p>
+<p>Also there are variables that aren't correlated at all with each other:</p>
+<p>Milk and Fresh / Grocery and Fresh / Frozen and Milk / Frozen and Grocery / Detergents_pap and Fresh / Detergents_pap and Frozen /  Delicatessen and Fresh / Delicatessen and Grocery / Delicatessen and Detergents_Paper.</p>
 <p>The data looks like a strong positive skewed normal distribution, where there are a lot of customers with low purchase cost, even a lot more with medium cost and then it drops away (very steep for delicatessen and a bit smoother for fresh) and then has a bit of a tail for few customers with quite high purchase costs.</p>
 
 </div>
@@ -25447,10 +25493,8 @@ Sample point 2 predicted to be in Cluster 0
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>Normally for the A/B test the distributor should choose a random set of its customer that represents well all possible customer segements. 
-But if there are any customers that order only once a week, say on a monday and the delivery takes place Monday, Wednesday and Friday, then they won't even find out that delivery is now different than before and it won't affect them at all. So all customers that order regulary just once a week and always on the same day, then all monday/wednesday/friday-ordering customers should be excluded of the test.</p>
-<p>Of the remaining customers the distributor should chose a random set of customers, execute the test and write down the reactions so he is afterwards able to do the analysis.</p>
-<p>I would estimate that the restaurants will be more affected that the retail stores. Another option is to just do the AB test for the retail customers because it will be more hurtful for the restaurants and the distributor wont annoy its customers.</p>
+<p>For the A/B test the distributor should draw a random sample that represents customers from both segments. After performing the test he should analyse whether the segments reacted different from each other or if there are other relevant features - e.g. size of the establishment, purchase amount, purchase pattern, purchase day etc.</p>
+<p>I would assume that the change of delivery times is for segment "Restaurants" worse that for the segment "Retail". If there is an empty shelf in a retail store, consumers won't be happy but those things happen from time to time. This no reputation damaging thing. If a restaurant can't cook half of its menu or might use frozen/old groceries instead, consumers will get really annoyed. So I think it is worse for Restaurants.</p>
 
 </div>
 </div>
