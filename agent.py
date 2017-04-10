@@ -9,7 +9,7 @@ class LearningAgent(Agent):
     """ An agent that learns to drive in the Smartcab world.
         This is the object you will be modifying. """ 
 
-    def __init__(self, env, learning=True, epsilon=1.0, alpha=0.75):
+    def __init__(self, env, learning=True, epsilon=1.0, alpha=0.95):
         super(LearningAgent, self).__init__(env)     # Set the agent in the evironment 
         self.planner = RoutePlanner(self.env, self)  # Create a route planner
         self.valid_actions = self.env.valid_actions  # The set of valid actions
@@ -47,7 +47,7 @@ class LearningAgent(Agent):
             self.epsilon = 0.0
             self.alpha = 0.0	
         else:
-            #self.epsilon = self.epsilon - 0.001
+            #self.epsilon = self.epsilon - 0.05 ## this one is for default learning
             self.t += 1 #for each trial count plus one
             self.epsilon = math.pow(self.a, self.t)
 			#self.epsilon = 1/ (self.t*self.t)
@@ -69,7 +69,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set 'state' as a tuple of relevant data for the agent        
-        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'], deadline) #inputs['right']
+        state = (waypoint, inputs['light'], inputs['oncoming'], inputs['left'], inputs['right']) #removed deadline
 		
         return state
 
@@ -86,11 +86,11 @@ class LearningAgent(Agent):
 
 
         for action in self.valid_actions:
-            erg = self.Q[state][action]
-            if erg > self.maxQ:
-                self.maxQ = erg		
+            #erg = self.Q[state][action]
+            #if erg > self.maxQ:
+                #self.maxQ = erg	
+            maxQ = max(self.Q[state].values())				
 		
-		#maxQ = max(self.Q[state].values())
 		
         return maxQ 
 
@@ -114,7 +114,9 @@ class LearningAgent(Agent):
 	
         return
 
-
+    def __getitem__(self, item):
+        return getattr(self, item)	
+		
     def choose_action(self, state):
         """ The choose_action function is called when the agent is asked to choose
             which action to take, based on the 'state' the smartcab is in. """
@@ -123,25 +125,31 @@ class LearningAgent(Agent):
         self.state = state
         self.next_waypoint = self.planner.next_waypoint()
         action = random.choice( self.valid_actions )
-
+        action_list = [] 
+        action_list_low = [] 
+	
+		
         ########### 
         ## TO DO ##
         ###########
         # When not learning, choose a random action
         # When learning, choose a random action with 'epsilon' probability
         #   Otherwise, choose an action with the highest Q-value for the current state
-        if self.learning == False:
+        if self.learning == False:   								# -> When not learning, choose a random action
             random.choice( self.valid_actions )
         else:
-            if self.epsilon > random.random():
-                action = random.choice(self.valid_actions)
-            else:
-			    action = numpy.random.choice([random.choice(self.valid_actions), max(self.Q[state], key=self.Q[state].get)], p=[self.epsilon, 1- self.epsilon])
-				
-		
-        return action
+            if self.epsilon > random.random():  					# -> When learning, choose a random action with 'epsilon' probability
+                action = random.choice(self.valid_actions)	
+            else:													# -> Otherwise, choose an action with the highest Q-value for the current state
+                for actual_action in self.valid_actions:
+                    max_q_state = self.get_maxQ(state) 				#highes Q-Value for current State
+                    if self.Q[state][actual_action] >= max_q_state: #if current action is higher than q_value insert into list
+                        action_list.append(actual_action)
+                        action = random.choice(action_list)
 
-
+        return action				
+			
+						
     def learn(self, state, action, reward):
         """ The learn function is called after the agent completes an action and
             receives an award. This function does not consider future rewards 
