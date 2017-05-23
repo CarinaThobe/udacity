@@ -1,6 +1,8 @@
-# All i used is documented in my code capstone.ipynb (or: capstone_code.html which is the html export of the ipython notebook)
+## Dokumentation
+All i used is documented in my code capstone.ipynb (or: capstone_code.html which is the html export of the ipython notebook)
 
-# I imported the following libraries:
+## Libraries
+I imported the following libraries:
 import numpy as np
 import pandas as pd
 from IPython.display import display 
@@ -16,5 +18,6 @@ from sklearn.svm import SVC
 from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
 
-# The Dataset is downloadable from kaggle: 
+## Dataset
+The Dataset is downloadable from kaggle: 
 https://www.kaggle.com/dalpozz/creditcardfraud 
