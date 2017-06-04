@@ -1,5 +1,5 @@
 ## Dokumentation
-All i used is documented in my code capstone.ipynb (or: capstone_code.html which is the html export of the ipython notebook)
+All i used is documented in my code python notebook "capstone.ipynb" (or: "capstone.html" which is the HTML export of the ipython notebook)
 
 ## Libraries
 I imported the following libraries:
